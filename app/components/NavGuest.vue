@@ -1,21 +1,68 @@
 <script setup>
-import { PawPrintIcon } from 'lucide-vue-next';
+import { Menu, PawPrintIcon } from 'lucide-vue-next';
+
+let mobileMenu = null;
+let menuButton = null;
+
+onMounted(() => {
+  menuButton = document.getElementById('menu-button');
+  mobileMenu = document.getElementById('mobile-menu');
+  let mobileMenuItems = mobileMenu.querySelectorAll('#mobile-menu > li');
+  menuButton.addEventListener('click', () => {
+    toggleHidden(mobileMenu);
+  });
+
+  mobileMenuItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      toggleHidden(mobileMenu);
+    });
+  });
+})
+
+function toggleHidden(element){
+  element.classList.toggle('hidden');
+}
 </script>
 
 <template>
-    <header class="bg-orange-100 p-4">
-        <nav class="container mx-auto flex justify-between items-center">
-          <NuxtLink to="/" class="flex items-center text-orange-700 text-2xl font-bold">
-            <PawPrintIcon  class="h-8 w-8 mr-2"/>
-            PetAdopt
+  <header class="bg-orange-100 p-4">
+    <nav class="container mx-auto ">
+      <div class="flex justify-between items-center">
+        <NuxtLink to="/" class="flex items-center text-orange-700 text-2xl font-bold">
+          <PawPrintIcon class="h-8 w-8 mr-2" />
+          PetAdopt
+        </NuxtLink>
+        <button id="menu-button" class="block sm:hidden text-orange-500 hover:text-orange-700 active:text-orange-900">
+          <Menu />
+        </button>
+        <ul class="hidden sm:flex space-x-4" id="menu">
+          <li>
+            <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Inicio
+            </NuxtLink>
+          </li>
+          <li><a href="#refugios" class="text-orange-700 hover:text-orange-900">Refugios</a></li>
+          <li>
+            <NuxtLink to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">
+              Animales
+            </NuxtLink>
+          </li>
+          <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
+          <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
+        </ul>
+      </div>
+      <ul id="mobile-menu" class="hidden sm:hidden">
+        <li>
+          <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Inicio
           </NuxtLink>
-          <ul class="flex space-x-4">
-            <li><NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900">Inicio</NuxtLink> </li>
-            <li><a href="#refugios" class="text-orange-700 hover:text-orange-900">Refugios</a></li>
-            <li><NuxtLink to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900">Animales</NuxtLink> </li>
-            <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
-            <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
-          </ul>
-        </nav>
-      </header>
+        </li>
+        <li><a href="#refugios" class="text-orange-700 hover:text-orange-900">Refugios</a></li>
+        <li>
+          <NuxtLink  to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Animales
+          </NuxtLink>
+        </li>
+        <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
+        <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
 </template>

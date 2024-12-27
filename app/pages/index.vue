@@ -73,7 +73,7 @@
         </div>
       </section>
 
-      <section id="contacto" class="py-16 bg-amber-100">
+      <section id="contacto" class="py-16 px-4 bg-amber-100 sm:px-0">
         <div class="container mx-auto max-w-md">
           <h2 class="text-3xl font-bold text-amber-800 text-center mb-8">Contáctanos</h2>
           <form @submit.prevent="enviarFormulario" class="space-y-4">
