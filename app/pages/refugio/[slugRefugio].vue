@@ -104,7 +104,7 @@ await getInitialdata();
 async function getInitialdata() {
   const { data, error } = await useAPI('/public/refugio/slug/' + useRoute().params.slugRefugio)
 
- console.log(data);
+ //console.log(data);
   if (error.value !== null) {
     throw createError({
       statusCode: 404,
@@ -117,7 +117,7 @@ async function getInitialdata() {
 }
 
 useHead({
-  title: 'Refugio'
+  title: 'Refugio: ' + refugio.value.nombre
 })
 
 

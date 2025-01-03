@@ -6,7 +6,8 @@
           <h1 class="text-4xl font-bold text-orange-800 mb-4">Encuentra a tu compañero perfecto</h1>
           <p class="text-xl text-orange-700 mb-8">Adopta una mascota y cambia dos vidas: la suya y la tuya.</p>
           <div class="space-x-4">
-            <NuxtLink to="/animales" class="bg-orange-500 text-black px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300">
+            <NuxtLink to="/animales"
+              class="bg-orange-500 text-black px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300">
               Adoptar ahora
             </NuxtLink>
             <button class="bg-white text-black-500 px-6 py-2 rounded-full hover:bg-orange-100 transition duration-300">
@@ -19,16 +20,21 @@
       <section id="refugios" class="py-16 bg-amber-50">
         <div class="container mx-auto">
           <h2 class="text-3xl font-bold text-amber-800 text-center mb-12">Nuestros Refugios</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="refugio in refugios" :key="refugio.id" class="bg-white p-6 rounded-lg shadow-md">
-              <home-icon class="h-12 w-12 text-amber-500 mx-auto mb-4" />
-              <h3 class="text-xl font-semibold text-amber-700 text-center mb-2">{{ refugio.nombre }}</h3>
-              <p class="text-gray-600 text-center mb-4">{{ refugio.descripcion }}</p>
-              <p class="text-amber-600 text-center">
-                <map-pin-icon class="h-5 w-5 inline-block mr-1" />
-                {{ refugio.ubicacion }}
-              </p>
+          <div class="sm:grid sm:grid-cols-2 sm:gap-4">
+            <div class="text-center content-center">
+            <div class="mb-4 ">En esta sección encontrarás una lista de refugios que se han registrado de
+              manera voluntaria para formar parte de nuestra comunidad. Estos refugios trabajan incansablemente para
+              brindar cuidado, protección y una nueva oportunidad a los animales que lo necesitan.
+              <br><span class="font-bold text-orange-500 pt-6">¡Juntos podemos hacer la diferencia en la vida de miles
+                de animales!</span>
             </div>
+            </div>
+            <img src="/images/refugio-stock.webp"/>
+          </div>
+          <div class="mt-10 flex items-center justify-center">
+            <NuxtLink to="/refugios"
+                class="bg-orange-500 text-black px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300 self-center">
+                Buscar refugios cerca</NuxtLink>
           </div>
         </div>
       </section>
@@ -36,16 +42,24 @@
       <section id="animales" class="py-16 bg-orange-100">
         <div class="container mx-auto">
           <h2 class="text-3xl font-bold text-orange-800 text-center mb-12">Animales en Adopción</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="animal in animales" :key="animal.id" class="bg-white p-6 rounded-lg shadow-md">
-              <div class="bg-orange-200 h-48 rounded-md mb-4"></div>
-              <h3 class="text-xl font-semibold text-orange-700 mb-2">{{ animal.nombre }}</h3>
-              <p class="text-gray-600 mb-4">{{ animal.descripcion }}</p>
-              <button
-                class="w-full bg-orange-500 text-white py-2 rounded-full hover:bg-orange-600 transition duration-300">
-                Conocer más
-              </button>
+          <div class="sm:grid sm:grid-cols-2 sm:gap-4 content-center ">
+            <div class="text-center sm:mt-0 mt-10 flex justify-items-center">
+              <img src="/images/no-compres-adopta.webp" alt="No compres, adopta">
             </div>
+            <div class="text-center content-center sm:mt-0 mt-10 px-4 sm:px-0">
+              <div class="mb-4">
+                En esta sección encontrarás a los verdaderos protagonistas: animales maravillosos que están esperando
+                una segunda oportunidad para ser parte de un hogar lleno de amor. Cada uno tiene una historia única y un
+                corazón lleno de cariño para dar.
+              </div>
+              <span class="font-bold text-orange-500 pt-6">¡Da el primer paso y encuentra a tu nuevo mejor amigo hoy
+                mismo!</span>
+            </div>
+          </div>
+          <div class="mt-10 flex items-center justify-center">
+            <NuxtLink to="/animales"
+                class="bg-orange-500 text-black px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300 self-center">
+                Adoptar</NuxtLink>
           </div>
         </div>
       </section>
@@ -108,7 +122,7 @@ import { ref } from 'vue'
 import { HomeIcon, MapPinIcon, HeartIcon, UsersIcon, HelpCircleIcon } from 'lucide-vue-next'
 
 useHead({
-  title:'Inicio'
+  title: 'Inicio'
 })
 
 const refugios = ref([

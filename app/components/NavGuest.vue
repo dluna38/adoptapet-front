@@ -40,7 +40,8 @@ function toggleHidden(element){
             <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Inicio
             </NuxtLink>
           </li>
-          <li><a href="#refugios" class="text-orange-700 hover:text-orange-900">Refugios</a></li>
+          <li><NuxtLink to="/refugios" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Refugios
+          </NuxtLink></li>
           <li>
             <NuxtLink to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">
               Animales
@@ -55,7 +56,8 @@ function toggleHidden(element){
           <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Inicio
           </NuxtLink>
         </li>
-        <li><a href="#refugios" class="text-orange-700 hover:text-orange-900">Refugios</a></li>
+        <li><NuxtLink to="/refugios" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Refugios
+        </NuxtLink></li>
         <li>
           <NuxtLink  to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Animales
           </NuxtLink>
