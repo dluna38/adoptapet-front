@@ -13,7 +13,7 @@
               <div class="flex justify-between items-start mb-4">
                 <h1 class="text-3xl font-bold text-orange-800">{{ refugio.nombre }}</h1>
                 <div class="flex items-center">
-                  <star-icon v-if="refugio.verificado" class="h-6 w-6 text-yellow-500 mr-1" />
+                  <star-icon fill="#eab308" v-if="refugio.verificado" class="h-6 w-6 text-yellow-500 mr-1" />
                   <span v-if="refugio.verificado" class="text-sm text-yellow-600 font-medium">Verificado</span>
                 </div>
               </div>
@@ -33,7 +33,11 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h2 class="text-2xl font-bold text-orange-800 mb-4">Últimos animales en adopción</h2>
+              <div class="flex justify-between mb-5">
+                <h2 class="text-2xl font-bold text-orange-800 mb-1">Últimos animales en adopción</h2>
+                <NuxtLink :to="{path:`/refugio/${useRoute().params.slugRefugio}/animales`, state:{nombreRefugio:refugio.nombre}}" class="bg-orange-500 text-black px-6 py-1 rounded-full hover:bg-orange-600 transition duration-300">
+                  Ver todos</NuxtLink>
+              </div>
               <div v-if="refugio?.animales?.length !== 0">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div v-for="(animal,index) in refugio.animales" :key="index">
@@ -104,7 +108,7 @@ await getInitialdata();
 async function getInitialdata() {
   const { data, error } = await useAPI('/public/refugio/slug/' + useRoute().params.slugRefugio)
 
- //console.log(data);
+ console.log(data);
   if (error.value !== null) {
     throw createError({
       statusCode: 404,
