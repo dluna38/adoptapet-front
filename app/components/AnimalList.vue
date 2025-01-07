@@ -1,8 +1,9 @@
 <template>
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-orange-800 mb-8 text-center">{{ `Animales en adopción${props.forRefugio ? ' de ' : ''}` }}</h1>
+    <main class="flex-grow container mx-auto px-4 py-4">
+        <h1 v-if="!props.forRefugio" class="text-3xl font-bold text-orange-800 mb-8 text-center">Animales en adopción
+        </h1>
 
-        <div class="mb-2 grid grid-cols-1 md:grid-cols-3 gap-4">     
+        <div class="mb-2 grid grid-cols-1 md:grid-cols-3 gap-4" id="filtros">
             <div v-if="!props.forRefugio">
                 <label for="departamento" class="block text-sm font-medium text-orange-700 mb-1">Departamento</label>
                 <select id="departamento" v-model="filtros.departamento" @change="changeMunicipios"
@@ -19,8 +20,8 @@
                     <option v-for="mun in municipios[filtros.departamento]" :key="mun.id" :value="mun.id">{{ mun.nombre
                         }}</option>
                 </select>
-            </div >
-            <div >
+            </div>
+            <div>
                 <label for="especie" class="block text-sm font-medium text-orange-700 mb-1">Especie de animal</label>
                 <select id="especie" v-model="filtros.especie"
                     class="w-full p-2 border border-orange-300 rounded-md focus:ring-orange-500 focus:border-orange-500">
@@ -31,10 +32,16 @@
             </div>
         </div>
         <div class="mb-8">
-            <button @click="cargarAnimales" class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300">Buscar</button>
+            <button @click="cargarAnimales"
+                class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300">Buscar</button>
         </div>
-        <div v-if="animales?.length !== 0" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            <animal-card v-for="animal in animales" :key="animal.id" :animal="animal" :abrirModal="abrirModal" />
+        <div v-if="animales?.length !== 0">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4  xl:grid-cols-5 gap-4">
+                <animal-card v-for="animal in animales" :key="animal.id" :animal="animal" :abrirModal="abrirModal" />
+            </div>
+            <div class="mt-4">
+                <Paginator :rows="page.tamano" :total-records="page.totalElements" @page="changePage"/>
+            </div>
         </div>
         <div v-else>
             <p class="text-gray-600 text-center">No hay animales disponibles.</p>
@@ -47,13 +54,20 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-
+import Paginator from 'primevue/paginator';
+import Button from 'primevue/button';
 const props = defineProps({
     forRefugio: {
         type: Boolean,
         default: false,
         optional: true
     },
+})
+const page = ref({
+    actualPage: 0,
+    totalPages: 0,
+    tamano: 0,
+    totalElements:0
 })
 
 const filtros = ref({
@@ -66,13 +80,7 @@ const animales = ref([]);
 const modalAbierto = ref(false)
 const animalSeleccionado = ref(null)
 
-
-/* await .then(([animales, departamentos]) => {
-  departamentos.value = departamentos.data
-}) */
-//TODO poner loading al cambiar de departamentos 
 await Promise.all([cargarAnimales(), fetchDepartamentos()])
-await fetchDepartamentos();
 const departamentos = useDepartamentos();
 const municipios = useMunicipios();
 
@@ -83,17 +91,27 @@ async function cargarAnimales() {
     }
     const { data, error } = await useAPI('/public/animal', { query: filtros.value })
     console.log(data);
-    
+
     if (error.value !== null) {
         console.error('Error al cargar los animales', error.value)
         return
     }
     animales.value = data.value.contenido;
+    page.value.actualPage = data.value.paginaActual;
+    page.value.totalPages = data.value.paginasTotales;
+    page.value.tamano = data.value.tamano;
+    page.value.totalElements = data.value.totalElements;
 }
 
 
 const changeMunicipios = async () => {
     await fetchMunicipios(filtros.value.departamento);
+}
+
+function changePage(pageInfo) {
+    filtros.value.page = pageInfo.page;
+    console.log(pageInfo);
+    cargarAnimales();
 }
 
 const abrirModal = (animal) => {
@@ -108,3 +126,9 @@ const cerrarModal = () => {
     animalSeleccionado.value = null
 }
 </script>
+
+<style scoped>
+.p-paginator-page-selected {
+    color: black !important;
+}
+</style>
