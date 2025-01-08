@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden md:w-60">
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden ">
         <img :src="getAnimalImage(animal.fotoPortada.img)" :alt="'foto de '+animal.nombre" class="w-full h-48 object-contain" />
         <div class="px-6 pt-4 pb-2">
             <h2 class="text-xl font-semibold text-orange-700 mb-2">{{ animal.nombre }}</h2>

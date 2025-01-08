@@ -26,17 +26,20 @@
                 <select id="especie" v-model="filtros.especie"
                     class="w-full p-2 border border-orange-300 rounded-md focus:ring-orange-500 focus:border-orange-500">
                     <option value="">Todos</option>
-                    <option value="perro">Perros</option>
-                    <option value="gato">Gatos</option>
+                    <option value="2">Perros</option>
+                    <option value="1">Gatos</option>
                 </select>
             </div>
         </div>
-        <div class="mb-8">
+        <div class="mb-8 space-x-2">
             <button @click="cargarAnimales"
                 class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300">Buscar</button>
+            <button @click="limpiarFiltros"
+                class="bg-yellow-400 text-black px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300">Limpiar filtro</button>
         </div>
+        <CatLoader :loading="animalsLoading" :black-cover="false"/>
         <div v-if="animales?.length !== 0">
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4  xl:grid-cols-5 gap-4">
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))]  gap-4">
                 <animal-card v-for="animal in animales" :key="animal.id" :animal="animal" :abrirModal="abrirModal" />
             </div>
             <div class="mt-4">
@@ -47,7 +50,7 @@
             <p class="text-gray-600 text-center">No hay animales disponibles.</p>
         </div>
     </main>
-
+    
     <animal-detail-modal :animalSeleccionado="animalSeleccionado" @cerrarModal="cerrarModal"
         :modalAbierto="modalAbierto" />
 </template>
@@ -56,6 +59,10 @@
 import { ref, computed } from 'vue'
 import Paginator from 'primevue/paginator';
 import Button from 'primevue/button';
+import CatLoader from './CatLoader.vue';
+
+const animalsLoading  = ref(false);
+
 const props = defineProps({
     forRefugio: {
         type: Boolean,
@@ -89,7 +96,9 @@ async function cargarAnimales() {
         console.log("para refugio");
         filtros.value.refugio = useRoute().params.slugRefugio
     }
+    animalsLoading.value = true;
     const { data, error } = await useAPI('/public/animal', { query: filtros.value })
+    animalsLoading.value = false;
     console.log(data);
 
     if (error.value !== null) {
@@ -124,6 +133,16 @@ const abrirModal = (animal) => {
 const cerrarModal = () => {
     modalAbierto.value = false
     animalSeleccionado.value = null
+}
+
+function limpiarFiltros(params) {
+    filtros.value = {
+        page: 0,
+        departamento: '',
+        mun: '',
+        especie: ''
+    }
+    cargarAnimales();
 }
 </script>
 
