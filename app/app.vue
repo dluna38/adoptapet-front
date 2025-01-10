@@ -3,7 +3,7 @@ useHead({
   // as a string,
   // where `%s` is replaced with the title
   titleTemplate: '%s - AdoptaPet',
-  htmlAttrs:{
+  htmlAttrs: {
     lang: 'es',
     class: 'light'
   }
@@ -13,8 +13,8 @@ useHead({
 
 <template>
   <div>
-  <NuxtLayout>
-    <NuxtPage/>
-  </NuxtLayout>
-</div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </div>
 </template>

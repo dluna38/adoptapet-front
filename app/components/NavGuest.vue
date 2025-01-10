@@ -37,33 +37,43 @@ function toggleHidden(element){
         </button>
         <ul class="hidden sm:flex space-x-4" id="menu">
           <li>
-            <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Inicio
+            <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">Inicio
             </NuxtLink>
           </li>
-          <li><NuxtLink to="/refugios" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Refugios
+          <li><NuxtLink to="/refugios" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">Refugios
           </NuxtLink></li>
           <li>
-            <NuxtLink to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">
+            <NuxtLink to="/animales" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">
               Animales
             </NuxtLink>
           </li>
           <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
           <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
+          <li>
+            <NuxtLink to="/login" class="text-orange-700 hover:text-orange-900" target="_blank" exact-active-class="text-orange-900 font-bold">
+              Ingresar
+            </NuxtLink>
+          </li>
         </ul>
       </div>
       <ul id="mobile-menu" class="hidden sm:hidden">
         <li>
-          <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Inicio
+          <NuxtLink to="/" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">Inicio
           </NuxtLink>
         </li>
-        <li><NuxtLink to="/refugios" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Refugios
+        <li><NuxtLink to="/refugios" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">Refugios
         </NuxtLink></li>
         <li>
-          <NuxtLink  to="/animales" class="text-orange-700 hover:text-orange-900" active-class="text-orange-900 font-bold">Animales
+          <NuxtLink  to="/animales" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">Animales
           </NuxtLink>
         </li>
         <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
         <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
+        <li>
+            <NuxtLink to="/login" class="text-orange-700 hover:text-orange-900" target="_blank" exact-active-class="text-orange-900 font-bold">
+              Ingresar
+            </NuxtLink>
+          </li>
       </ul>
     </nav>
   </header>
