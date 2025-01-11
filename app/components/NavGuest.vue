@@ -50,7 +50,7 @@ function toggleHidden(element){
           <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
           <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
           <li>
-            <NuxtLink to="/login" class="text-orange-700 hover:text-orange-900" target="_blank" exact-active-class="text-orange-900 font-bold">
+            <NuxtLink to="/login" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">
               Ingresar
             </NuxtLink>
           </li>
@@ -70,7 +70,7 @@ function toggleHidden(element){
         <li><a href="#como-ayudar" class="text-orange-700 hover:text-orange-900">Cómo Ayudar</a></li>
         <li><a href="#contacto" class="text-orange-700 hover:text-orange-900">Contacto</a></li>
         <li>
-            <NuxtLink to="/login" class="text-orange-700 hover:text-orange-900" target="_blank" exact-active-class="text-orange-900 font-bold">
+            <NuxtLink to="/login" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">
               Ingresar
             </NuxtLink>
           </li>

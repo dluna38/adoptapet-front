@@ -114,6 +114,7 @@ async function cargarAnimales() {
 
 
 const changeMunicipios = async () => {
+    //TODO PUT LOADER HERE
     await fetchMunicipios(filtros.value.departamento);
 }
 

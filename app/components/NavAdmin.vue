@@ -56,7 +56,7 @@ function toggleHidden(element){
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/logout" class="text-orange-700 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">
+            <NuxtLink to="/logout" class="text-blac-900 hover:text-orange-900" exact-active-class="text-orange-900 font-bold">
               Cerrar sesión
             </NuxtLink>
           </li>
