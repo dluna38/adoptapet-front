@@ -1,0 +1,26 @@
+// composables/useLocation.js
+
+export const useEspecies = () =>
+    useState('especies', () => []);
+
+export const useRazas = () =>
+    useState('razas', () => ({}));
+
+export const fetchEspecies = async () => {
+    const especies = useEspecies();
+    if (especies.value?.length === 0) {
+        const { data } = await useAPI('/base-data/especies');
+        especies.value = data; // Guardar los departamentos en el estado global
+    }
+};
+
+export const fetchRazas = async (idEspecie) => {
+    const razas = useRazas();
+    
+    if (!razas.value[idEspecie]) {
+        console.log("loading mun: "+idEspecie);
+        const { data } = await useAPI('/base-data/razas/especie/' + idEspecie);
+        
+        razas.value[idEspecie] = [...data.value.municipios];
+    }
+};
