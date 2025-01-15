@@ -17,7 +17,8 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-md overflow-hidden overflow-x-auto">
-                <data-table v-if="animales?.length !== 0" :value="animales" tableStyle="min-width: 50rem" paginator  :rows="page.tamano" :total-records="page.totalElements" @page="changePage">
+                <data-table v-if="animales?.length !== 0" :value="animales" tableStyle="min-width: 50rem" paginator
+                    :rows="page.tamano" :total-records="page.totalElements" @page="changePage">
                     <column field="nombre" header="Nombre"></column>
                     <column field="raza.especie.nombre" header="Especie"></column>
                     <column field="raza.nombre" header="Raza"></column>
@@ -31,21 +32,28 @@
                     <column header="Publicado">
                         <template #body="slotProps">
                             <span :class="[
-                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                                    slotProps.data.habilitadoAdopcion ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                ]">
-                                    {{ slotProps.data.habilitadoAdopcion ? 'Sí' : 'No' }}
-                                    </span>
+                                'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                slotProps.data.habilitadoAdopcion ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            ]">
+                                {{ slotProps.data.habilitadoAdopcion ? 'Sí' : 'No' }}
+                            </span>
                         </template>
                     </column>
-                    <column  header="Acciones">
+                    <column header="Acciones">
                         <template #body="slotProps">
                             <button @click="viewDetails(slotProps.data)"
-                                    class="text-orange-600 hover:text-orange-900 mr-3 rounded-md" v-tooltip.top="'Ver detalles'">
-                                    <Info />
-                                </button>
-                                <button @click="editAnimal(slotProps.data)"
-                                    class="text-indigo-600 hover:text-indigo-900" v-tooltip.top="'Editar animal'"><FilePenLine /></button>
+                                class="text-orange-600 hover:text-orange-900 mr-3 rounded-md"
+                                v-tooltip.top="'Ver detalles'">
+                                <Info />
+                            </button>
+                            <button @click="editAnimal(slotProps.data)"
+                                class="text-indigo-600 hover:text-indigo-900 mr-3" v-tooltip.top="'Editar animal'">
+                                <FilePenLine />
+                            </button>
+                            <button @click="deleteAnimal(slotProps.data)" class="text-indigo-600 hover:text-indigo-900"
+                                v-tooltip.top="'Borrar animal'">
+                                <Trash2 color="red" />
+                            </button>
                         </template>
                     </column>
                 </data-table>
@@ -90,7 +98,8 @@
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-700">Edad</h3>
-                                    <p class="text-gray-600">{{ getMonthsOrYearsFromNow(selectedAnimal.fechaNacimiento) }}</p>
+                                    <p class="text-gray-600">{{ getMonthsOrYearsFromNow(selectedAnimal.fechaNacimiento)
+                                        }}</p>
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-700">Color</h3>
@@ -111,11 +120,14 @@
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-700">Esterilizado</h3>
-                                    <p class="text-gray-600">{{ selectedAnimal.historiaClinica.estaEsterilizado ? 'Sí' : 'No' }}</p>
+                                    <p class="text-gray-600">{{ selectedAnimal.historiaClinica.estaEsterilizado ? 'Sí' :
+                                        'No' }}
+                                    </p>
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-700">Vacunado</h3>
-                                    <p class="text-gray-600">{{ selectedAnimal.historiaClinica.estaVacunado ? 'Sí' : 'No' }}</p>
+                                    <p class="text-gray-600">{{ selectedAnimal.historiaClinica.estaVacunado ? 'Sí' :
+                                        'No' }}</p>
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-semibold text-gray-700">Cuenta con chip</h3>
@@ -132,7 +144,8 @@
                             </div>
                             <div v-if="selectedAnimal.historiaClinica.estaVacunado" class="mt-4">
                                 <h3 class="text-lg font-semibold text-gray-700">Vacunas</h3>
-                                <p class="text-gray-600">{{ selectedAnimal.historiaClinica.vacunas !== null ? selectedAnimal.historiaClinica.vacunas : 'No registra' }}</p>
+                                <p class="text-gray-600">{{ selectedAnimal.historiaClinica.vacunas !== null ?
+                                    selectedAnimal.historiaClinica.vacunas : 'No registra' }}</p>
                             </div>
                         </div>
                     </div>
@@ -142,17 +155,21 @@
                     </div>
                     <div class="mt-6">
                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Observaciones Veterinaria</h3>
-                        <p class="text-gray-600">{{ selectedAnimal.historiaClinica.observaciones !== null ? selectedAnimal.observaciones : 'No registra'}}</p>
+                        <p class="text-gray-600">{{ selectedAnimal.historiaClinica.observaciones !== null ?
+                            selectedAnimal.observaciones : 'No registra'}}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <CatLoader :loading="loader" />
+    <Toast />
+    <ConfirmDialog></ConfirmDialog>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { SearchIcon, PlusIcon,XIcon,Info,FilePenLine } from 'lucide-vue-next'
+import { SearchIcon, PlusIcon, XIcon, Info, FilePenLine, Trash2 } from 'lucide-vue-next'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
@@ -165,14 +182,17 @@ const showAddModal = ref(false)
 const showDetailModal = ref(false)
 const selectedAnimal = ref({})
 const imagePreview = ref(null)
-const animalsLoading  = ref(false);
+const animalsLoading = ref(false);
+const loader = ref(false);
+const confirm = useConfirm();
+const toast = useToast();
 //------------
 const animales = ref([]);
 const page = ref({
     actualPage: 0,
     totalPages: 0,
     tamano: 0,
-    totalElements:0
+    totalElements: 0
 })
 
 const filtros = ref({
@@ -235,8 +255,44 @@ const closeDetailModal = () => {
     showDetailModal.value = false
 }
 
-const editAnimal = (id) => {
+const editAnimal = (animal) => {
     console.log(`Editar animal con ID: ${id}`)
     // Aquí iría la lógica para editar el animal
+}
+const deleteAnimal = async (animal) => {
+    confirm.require({
+        message: '¿Estas seguro?',
+        header: 'Eliminar animal',
+        rejectLabel: 'Cancelar',
+        rejectProps: {
+            label: 'Cancelar',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Borrar',
+            severity: 'danger'
+        },
+        accept: async () => {
+            loader.value = true;
+            const response = await useAPI(`/animal/${animal.id}`, { method: 'DELETE' })
+            
+
+            if (response.status.value === "error") {
+                console.log(response.error.value);
+                msgToast.value = response.error.value;
+                showToast();
+                return
+            }
+            await cargarAnimales();
+            loader.value = false;
+            toast.add({ severity: 'success', summary: 'Registro eliminado', detail: 'Registro eliminado correctamente', life: 3000 });
+        },
+        reject: () => {
+
+        }
+    });
+
+    // Aquí iría la lógica para eliminar el animal
 }
 </script>

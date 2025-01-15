@@ -179,9 +179,13 @@
                         </button>
                     </div>
                 </Form>
+                <div>
+                    <button @click="showToast">click</button>
+                </div>
             </div>
         </div>
     </div>
+    <MyToast title="Info" severity="error" :message="msgToast" ref="myToastRef"/>
 </template>
 
 
@@ -190,11 +194,14 @@ import { fetchEstadosHC, useEspecies, useRazas, fetchRazas, fetchEspecies } from
 import Select from 'primevue/select';
 import DatePicker from 'primevue/datepicker';
 import { Form } from '@primevue/forms';
+import MyToast from '~/components/MyToast.vue';
 
 useHead({
     title: 'Nuevo animal'
 })
 
+const myToastRef = useTemplateRef("myToastRef");
+const msgToast = ref('Error');
 const especies = useEspecies();
 const estadosHC = useEstadosHC();
 const razas = useRazas();
@@ -202,6 +209,11 @@ const loadingRazas = ref(false);
 const imagePreview = ref(null)
 let fileAnimal = null
 await Promise.all([fetchEspecies(), fetchEstadosHC()])
+
+
+function showToast() {
+    myToastRef.value.showTemplate(); 
+}
 
 const changeRazas = async () => {
     loadingRazas.value = true;
@@ -246,12 +258,6 @@ const handleImageUpload = (event) => {
 }
 
 const addNewAnimal = async (e) => {
-    // e.originalEvent: Represents the native form submit event.
-    // e.valid: A boolean that indicates whether the form is valid or not.
-    // e.states: Contains the current state of each form field, including validity status.
-    // e.errors: An object that holds any validation errors for the invalid fields in the form.
-    // e.values: An object containing the current values of all form fields.
-    // e.reset: A function that resets the form to its initial state.
     if(!e.valid){
         return;
     }
@@ -274,6 +280,8 @@ const addNewAnimal = async (e) => {
 
     if(response.status.value === "error"){
         console.log(response.error.value);
+        msgToast.value = response.error.value;
+        showToast();
         return
     }
     navigateTo('/administracion/animales')
