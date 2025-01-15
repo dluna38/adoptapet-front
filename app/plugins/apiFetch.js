@@ -12,7 +12,9 @@ export default defineNuxtPlugin(nuxtApp => {
         },
         async onResponseError({ response }) {
           if (response.status === 401 || response.status === 403) {
-            token.value = null
+            console.log('Unauthorized or Forbidden');
+            
+            //token.value = null
             await nuxtApp.runWithContext(() => navigateTo('/login'))
           }
         }

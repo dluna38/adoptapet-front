@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@primevue/forms": "^4.2.5",
     "lucide-vue-next": "^0.469.0",
     "nuxt": "^3.14.1592",
     "primevue": "^4.2.5",

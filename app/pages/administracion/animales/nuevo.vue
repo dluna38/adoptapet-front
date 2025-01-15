@@ -3,32 +3,41 @@
         <div class="bg-white rounded-lg shadow-md p-6 mx-auto my-4">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-orange-800 mb-4">Agregar Nuevo Animal</h2>
-                <form @submit.prevent="addNewAnimal">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <Form v-slot="$form" :resolver="resolver" @submit="addNewAnimal" id="formAnimal">
+                    <div class="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-4 mb-4">
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                            <input type="text" id="name" v-model="newAnimal.name" required
+                            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                            <input type="text" id="nombre" v-model="newAnimal.nombre" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500" />
                         </div>
                         <div>
-                            <label for="species" class="block text-sm font-medium text-gray-700 mb-1">Especie</label>
-                            <select id="species" v-model="newAnimal.species" required
+                            <label for="sexo" class="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
+                            <Select name="sexo" id="sexo" v-model="newAnimal.sexo" required
+                                small size="small" placeholder="Selecciona uno" :options="[{nombre:'Macho',code:'M'},{nombre:'Hembra',code:'H'}]" option-value="code" option-label="nombre"   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                            </Select>
+                            <Message v-if="$form.sexo?.invalid" severity="error" size="small" variant="simple">{{ $form.sexo?.error?.message }}</Message>
+                        </div>
+                        <div>
+                            <label for="especie" class="block text-sm font-medium text-gray-700 mb-1">Especie</label>
+                            <Select name="especie" @change="changeRazas" id="especie" v-model="newAnimal.especie" required
+                                small size="small" placeholder="Selecciona una" :options="especies" option-value="id" option-label="nombre"   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                            </Select>
+                            <Message v-if="$form.especie?.invalid" severity="error" size="small" variant="simple">{{ $form.especie?.error?.message }}</Message>
+                        </div>
+                        <div>
+                            <label for="raza" class="block text-sm font-medium text-gray-700 mb-1">Raza</label>
+                            <Select name="raza" v-model="newAnimal.raza" :options="razas[newAnimal.especie]"
+                                :loading="loadingRazas" size="small" placeholder="Selecciona una" filter
+                                option-label="nombre" option-value="id" empty-message="No hay razas disponibles"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
-                                <option value="Perro">Perro</option>
-                                <option value="Gato">Gato</option>
-                                <option value="Otro">Otro</option>
-                            </select>
+                            </Select>
+                            <Message v-if="$form.raza?.invalid" severity="error" size="small" variant="simple">{{ $form.raza?.error?.message }}</Message>
                         </div>
                         <div>
-                            <label for="breed" class="block text-sm font-medium text-gray-700 mb-1">Raza</label>
-                            <input type="text" id="breed" v-model="newAnimal.breed" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500" />
-                        </div>
-                        <div>
-                            <label for="birthDate" class="block text-sm font-medium text-gray-700 mb-1">Fecha de
+                            <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700 mb-1">Fecha de
                                 Nacimiento</label>
-                            <input type="month" id="birthDate" v-model="newAnimal.birthDate" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500" />
+                                <DatePicker name="fechaNacimiento" v-model="newAnimal.fechaNacimiento" view="month" dateFormat="mm/yy" :max-date="new Date()"/>
+                                <Message v-if="$form.fechaNacimiento?.invalid" severity="error" size="small" variant="simple">{{ $form.fechaNacimiento?.error?.message }}</Message>
                         </div>
                         <div>
                             <label for="color" class="block text-sm font-medium text-gray-700 mb-1">Color</label>
@@ -36,66 +45,104 @@
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500" />
                         </div>
                         <div>
-                            <label for="size" class="block text-sm font-medium text-gray-700 mb-1">Tamaño</label>
-                            <select id="size" v-model="newAnimal.size" required
+                            <label for="tamano" class="block text-sm font-medium text-gray-700 mb-1">Tamaño</label>
+                            <select id="tamano" v-model="newAnimal.tamano" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
-                                <option value="Pequeño">Pequeño</option>
-                                <option value="Mediano">Mediano</option>
-                                <option value="Grande">Grande</option>
+                                <option value="PEQUENO">Pequeño</option>
+                                <option value="MEDIANO">Mediano</option>
+                                <option value="GRANDE">Grande</option>
                             </select>
                         </div>
                         <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                            <select id="status" v-model="newAnimal.status" required
+                            <label for="habilitadoAdopcion" class="block text-sm font-medium text-gray-700 mb-1">Habilidado
+                                adopcion</label>
+                            <select id="habilitadoAdopcion" v-model="newAnimal.habilitadoAdopcion" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
-                                <option value="Disponible">Disponible</option>
-                                <option value="En tratamiento">En tratamiento</option>
-                                <option value="Adoptado">Adoptado</option>
+                                <option value="true">Si</option>
+                                <option value="false">No</option>
                             </select>
                         </div>
                         <div>
-                            <label for="sterilized"
+                            <label for="estaEsterilizado"
                                 class="block text-sm font-medium text-gray-700 mb-1">Esterilizado</label>
-                            <select id="sterilized" v-model="newAnimal.sterilized" required
+                            <select id="estaEsterilizado" v-model="newAnimal.estaEsterilizado" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
                                 <option :value="true">Sí</option>
                                 <option :value="false">No</option>
                             </select>
                         </div>
                         <div>
-                            <label for="vaccinated"
+                            <label for="vacunas"
                                 class="block text-sm font-medium text-gray-700 mb-1">Vacunado</label>
-                            <select id="vaccinated" v-model="newAnimal.vaccinated" required
+                            <select id="vacunas" v-model="newAnimal.estaVacunado" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
                                 <option :value="true">Sí</option>
                                 <option :value="false">No</option>
                             </select>
                         </div>
-                        <div v-if="newAnimal.vaccinated">
-                            <label for="vaccines" class="block text-sm font-medium text-gray-700 mb-1">Vacunas</label>
-                            <input type="text" id="vaccines" v-model="newAnimal.vaccines"
+                        <div v-if="newAnimal.estaVacunado">
+                            <label for="vacunas" class="block text-sm font-medium text-gray-700 mb-1">Vacunas</label>
+                            <input type="text" id="vacunas" v-model="newAnimal.vacunas"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
                                 placeholder="Ej: Rabia, Parvovirus, etc." />
                         </div>
                         <div>
                             <label for="chip" class="block text-sm font-medium text-gray-700 mb-1">Cuenta con
                                 chip</label>
-                            <select id="chip" v-model="newAnimal.hasChip" required
+                            <select id="chip" v-model="newAnimal.tieneChip" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
                                 <option :value="true">Sí</option>
                                 <option :value="false">No</option>
                             </select>
                         </div>
                         <div>
-                            <label for="character" class="block text-sm font-medium text-gray-700 mb-1">Carácter</label>
-                            <input type="text" id="character" v-model="newAnimal.character" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500" />
+                            <label for="comportamiento"
+                                class="block text-sm font-medium text-gray-700 mb-1">Comportamiento</label>
+                            <Select  name="comportamiento" size="small" placeholder="Selecciona uno" :options="estadosHC.ComportamientoAnimal"
+                                option-label="name" option-value="code" v-model="newAnimal.comportamiento" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                                <template #option="slotProps">
+                                    <div v-tooltip.top="slotProps.option.description">{{ slotProps.option.name }}</div>
+                                </template>
+                            </Select>
+                            <Message v-if="$form.comportamiento?.invalid" severity="error" size="small" variant="simple">{{ $form.comportamiento?.error?.message }}</Message>
                         </div>
                         <div>
-                            <label for="healthStatus" class="block text-sm font-medium text-gray-700 mb-1">Estado de
+                            <label for="condicionMedica" class="block text-sm font-medium text-gray-700 mb-1">Estado de
                                 Salud</label>
-                            <input type="text" id="healthStatus" v-model="newAnimal.healthStatus" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500" />
+                            <Select size="small" name="condicionMedica" placeholder="Selecciona uno" :options="estadosHC.CondicionMedicaAnimal"
+                                option-label="name" option-value="code" v-model="newAnimal.condicionMedica" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                                <template #option="slotProps">
+                                    <div v-tooltip.top="slotProps.option.description">{{ slotProps.option.name }}</div>
+                                </template>
+                            </Select>
+                            <Message v-if="$form.condicionMedica?.invalid" severity="error" size="small" variant="simple">{{ $form.condicionMedica?.error?.message }}</Message>
+                        </div>
+                        <div>
+                            <label for="necesidadesEspeciales" class="block text-sm font-medium text-gray-700 mb-1">Necesidades
+                                especiales</label>
+                            <Select size="small" name="necesidadesEspeciales" placeholder="Selecciona uno"
+                                :options="estadosHC.NecesidadEspecialAnimal" option-label="name" option-value="code"
+                                v-model="newAnimal.necesidadesEspeciales" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                                <template #option="slotProps">
+                                    <div v-tooltip.top="slotProps.option.description">{{ slotProps.option.name }}</div>
+                                </template>
+                            </Select>
+                            <Message v-if="$form.necesidadesEspeciales?.invalid" severity="error" size="small" variant="simple">{{ $form.necesidadesEspeciales?.error?.message }}</Message>
+                        </div>
+                        <div>
+                            <label for="estadoGeneral" class="block text-sm font-medium text-gray-700 mb-1">Estado de
+                                general</label>
+                            <Select size="small" name="estadoGeneral" placeholder="Selecciona uno" :options="estadosHC.EstadoGeneralAnimal"
+                                option-label="name" id="chip" v-model="newAnimal.estadoGeneral" required option-value="code"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500">
+                                <template #option="slotProps">
+                                    <div v-tooltip.top="slotProps.option.description">{{ slotProps.option.name }}</div>
+                                </template>
+                            </Select>
+                            <Message v-if="$form.estadoGeneral?.invalid" severity="error" size="small" variant="simple">{{ $form.estadoGeneral?.error?.message }}</Message>
                         </div>
                         <div>
                             <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Foto del
@@ -109,15 +156,15 @@
                         </div>
                     </div>
                     <div class="mb-4">
-                        <label for="description"
+                        <label for="descripcion"
                             class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                        <textarea id="description" v-model="newAnimal.description" rows="3"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"></textarea>
+                        <textarea placeholder="Breve descripción del animal" id="descripcion" v-model="newAnimal.descripcion" rows="3"
+                            required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"></textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="medicalRecord" class="block text-sm font-medium text-gray-700 mb-1">Ficha
+                        <label for="observaciones" class="block text-sm font-medium text-gray-700 mb-1">Observación
                             Veterinaria</label>
-                        <textarea id="medicalRecord" v-model="newAnimal.medicalRecord" rows="3"
+                        <textarea id="observaciones" v-model="newAnimal.observaciones" rows="3"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-orange-500 focus:border-orange-500"
                             placeholder="Ingrese información sobre vacunas, tratamientos, etc."></textarea>
                     </div>
@@ -131,7 +178,7 @@
                             Guardar
                         </button>
                     </div>
-                </form>
+                </Form>
             </div>
         </div>
     </div>
@@ -139,67 +186,130 @@
 
 
 <script setup>
+import { fetchEstadosHC, useEspecies, useRazas, fetchRazas, fetchEspecies } from '~/composables/useDataNewAnimal'
+import Select from 'primevue/select';
+import DatePicker from 'primevue/datepicker';
+import { Form } from '@primevue/forms';
+
+useHead({
+    title: 'Nuevo animal'
+})
+
+const especies = useEspecies();
+const estadosHC = useEstadosHC();
+const razas = useRazas();
+const loadingRazas = ref(false);
+const imagePreview = ref(null)
+let fileAnimal = null
+await Promise.all([fetchEspecies(), fetchEstadosHC()])
+
+const changeRazas = async () => {
+    loadingRazas.value = true;
+    await fetchRazas(newAnimal.value.especie);
+    loadingRazas.value = false;
+}
+
+
 const newAnimal = ref({
-    name: '',
-    species: 'Perro',
-    breed: '',
-    birthDate: '',
+    nombre: '',
+    sexo:'M',
+    especie: '-1',
+    raza: '',
+    fechaNacimiento: null,
     color: '',
-    size: 'Mediano',
-    status: 'Disponible',
-    sterilized: false,
-    vaccinated: false,
-    vaccines: '',
-    hasChip: false,
-    character: '',
-    healthStatus: '',
-    description: '',
-    medicalRecord: '',
+    tamano: 'Mediano',
+    habilitadoAdopcion: true,
+    estaEsterilizado: false,
+    estaVacunado: false,
+    vacunas: '',
+    tieneChip: false,
+    comportamiento: '',
+    condicionMedica: '',
+    estadoGeneral: '',
+    necesidadesEspeciales: '',
+    descripcion: '',
+    observaciones: '',
     image: '/placeholder.svg?height=80&width=80'
 })
 
-const resetNewAnimalForm = () => {
-    newAnimal.value = {
-        name: '',
-        species: 'Perro',
-        breed: '',
-        birthDate: '',
-        color: '',
-        size: 'Mediano',
-        status: 'Disponible',
-        sterilized: false,
-        vaccinated: false,
-        vaccines: '',
-        hasChip: false,
-        character: '',
-        healthStatus: '',
-        description: '',
-        medicalRecord: '',
-        image: '/placeholder.svg?height=80&width=80'
-    }
-    imagePreview.value = null
-}
-
 const handleImageUpload = (event) => {
-    const file = event.target.files[0]
-    if (file) {
+    fileAnimal = event.target.files[0]
+    if (fileAnimal) {
         const reader = new FileReader()
         reader.onload = (e) => {
-            newAnimal.value.image = e.target.result
             imagePreview.value = e.target.result
         }
-        reader.readAsDataURL(file)
+        reader.readAsDataURL(fileAnimal)
+    }else{
+        imagePreview.value = null
     }
 }
 
-const addNewAnimal = () => {
-    const id = animals.value.length + 1
-    const birthDate = new Date(newAnimal.value.birthDate)
-    const age = calculateAge(birthDate)
-    const animalToAdd = { ...newAnimal.value, id, age }
-    animals.value.push(animalToAdd)
-    closeAddModal()
-    console.log('Nuevo animal agregado:', animalToAdd)
+const addNewAnimal = async (e) => {
+    // e.originalEvent: Represents the native form submit event.
+    // e.valid: A boolean that indicates whether the form is valid or not.
+    // e.states: Contains the current state of each form field, including validity status.
+    // e.errors: An object that holds any validation errors for the invalid fields in the form.
+    // e.values: An object containing the current values of all form fields.
+    // e.reset: A function that resets the form to its initial state.
+    if(!e.valid){
+        return;
+    }
+    
+    const animalToAdd = { ...newAnimal.value }
+    animalToAdd.raza = { id: animalToAdd.raza }
+    console.log(animalToAdd)
+
+    const formData = new FormData()
+    //formData.append('datos', JSON.stringify(animalToAdd))
+    const jsonBlob = new Blob([JSON.stringify(animalToAdd)], { type: "application/json" });
+    formData.append("datos", jsonBlob);
+    formData.append('fotos', fileAnimal,"imagen.jpg")
+    console.log(Object.fromEntries(formData.entries()))
+
+    const response = await useAPI('/animal',{
+        method: 'POST',
+        body: formData,
+    })
+
+    if(response.status.value === "error"){
+        console.log(response.error.value);
+        return
+    }
+    navigateTo('/administracion/animales')
 }
+
+const resolver = ({ values }) => {
+    //console.log('validando');
+    //console.log(values);
+    const errors = {raza:[],especie:[],comportamiento:[],condicionMedica:[],necesidadesEspeciales:[],
+        necesidadesEspeciales:[],estadoGeneral:[],fechaNacimiento:[],sexo:[]};
+
+    if (values.raza === undefined || values.raza?.length === 0 || values.raza === '') {
+        errors.raza.push({ type:'required',message: 'Elige una' });
+    }
+    if (values.especie === undefined || values.especie?.length === 0 || values.especie === '') {
+        errors.especie.push({ type:'required',message: 'Elige una' });
+    }
+    if (values.comportamiento === undefined || values.comportamiento?.length === 0 || values.comportamiento === '') {
+        errors.comportamiento.push({ type:'required',message: 'Elige uno' });
+    }
+    if (values.condicionMedica === undefined || values.condicionMedica?.length === 0 || values.condicionMedica === '') {
+        errors.condicionMedica.push({ type:'required',message: 'Elige una' });
+    }
+    if (values.necesidadesEspeciales === undefined || values.necesidadesEspeciales?.length === 0 || values.necesidadesEspeciales === '') {
+        errors.necesidadesEspeciales.push({ type:'required',message: 'Elige una' });
+    }
+    if (values.estadoGeneral === undefined || values.estadoGeneral?.length === 0 || values.estadoGeneral === '') {
+        errors.estadoGeneral.push({ type:'required',message: 'Elige uno' });
+    }
+    if (values.fechaNacimiento === undefined || values.fechaNacimiento === null) {
+        errors.fechaNacimiento.push({ type:'required',message: 'Elige un mes, se calculara la edad' });
+    }
+    
+    return {
+        errors
+    };
+};
 
 </script>
