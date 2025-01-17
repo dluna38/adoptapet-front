@@ -315,9 +315,7 @@ const addNewAnimal = async (e) => {
     }   
     console.log(Object.fromEntries(formData.entries()))
 
-    setMsgToast(Severities.SUCCESS,'Actualizado','Animal actualizado correctamente')
-    navigateTo('/administracion/animales')
-    return
+
     let response = null
     if(props.forEdit){
         response = await useAPI('/animal/'+oldAnimal.value.id, {
@@ -336,6 +334,7 @@ const addNewAnimal = async (e) => {
         showToast(response.error.value);
         return
     }
+    setMsgToast(Severities.SUCCESS,props.forEdit ? 'Actualizado': 'Creado',`Animal ${props.forEdit ? 'actualizado': 'creado'} correctamente`)
     navigateTo('/administracion/animales')
 }
 
