@@ -62,10 +62,6 @@
                     <p class="text-gray-600 text-center">No se encontraron animales registrados</p>
                 </div>
             </div>
-
-            <div v-if="filteredAnimals.length === 0" class="text-center py-8">
-                <p class="text-gray-600">No se encontraron animales que coincidan con la búsqueda.</p>
-            </div>
         </main>
 
         <div v-if="showDetailModal"
@@ -164,7 +160,7 @@
         </div>
     </div>
     <CatLoader :loading="loader" />
-    <Toast />
+    <Toast group="msgToast"/>
     <ConfirmDialog></ConfirmDialog>
 </template>
 
@@ -173,6 +169,7 @@ import { ref, computed } from 'vue'
 import { SearchIcon, PlusIcon, XIcon, Info, FilePenLine, Trash2 } from 'lucide-vue-next'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { useMsgToast } from '~/composables/useMsgToast';
 
 useHead({
     title: 'Animales'
@@ -229,24 +226,6 @@ function changePage(pageInfo) {
 }
 //------------------------------------------------- old
 
-const animals = ref([
-    { id: 1, name: 'Luna', species: 'Perro', breed: 'Labrador', birthDate: '2022-03', age: '2 años', color: 'Dorado', size: 'Grande', publishForAdoption: true, sterilized: true, vaccinated: true, vaccines: 'Rabia, Parvovirus', hasChip: true, character: 'Amigable', healthStatus: 'Excelente', image: '/placeholder.svg?height=300&width=300', description: 'Luna es una perra labrador muy cariñosa y juguetona. Le encanta nadar y jugar a buscar la pelota.', medicalRecord: 'Última revisión: 15/04/2024. Vacunas al día. Sin problemas de salud detectados.' },
-    { id: 2, name: 'Max', species: 'Gato', breed: 'Siamés', birthDate: '2023-01', age: '1 año', color: 'Crema', size: 'Pequeño', publishForAdoption: false, sterilized: true, vaccinated: true, vaccines: 'Leucemia felina, Rabia', hasChip: false, character: 'Juguetón', healthStatus: 'Bueno', image: '/placeholder.svg?height=300&width=300', description: 'Max es un gato siamés muy activo y curioso. Le encanta explorar y jugar con juguetes interactivos.', medicalRecord: 'Última revisión: 10/03/2024. Vacunas al día. Ligera alergia alimentaria, dieta especial recomendada.' },
-    { id: 3, name: 'Rocky', species: 'Perro', breed: 'Pastor Alemán', birthDate: '2019-05', age: '5 años', color: 'Negro y Marrón', size: 'Grande', publishForAdoption: false, sterilized: false, vaccinated: true, vaccines: 'Rabia, Moquillo', hasChip: true, character: 'Protector', healthStatus: 'En recuperación', image: '/placeholder.svg?height=300&width=300', description: 'Rocky es un perro pastor alemán leal y protector. Excelente como perro guardián y compañero de familia.', medicalRecord: 'Última revisión: 20/02/2024. En recuperación de una lesión en la pata trasera derecha. Tratamiento en curso.' },
-    { id: 4, name: 'Mia', species: 'Gato', breed: 'Persa', birthDate: '2021-02', age: '3 años', color: 'Blanco', size: 'Mediano', publishForAdoption: true, sterilized: true, vaccinated: true, vaccines: 'Rabia, Panleucopenia', hasChip: false, character: 'Tranquila', healthStatus: 'Excelente', image: '/placeholder.svg?height=300&width=300', description: 'Mia es una gata persa muy tranquila y cariñosa. Le encanta que la cepillen y dormir en lugares cálidos.', medicalRecord: 'Última revisión: 05/05/2024. Vacunas al día. Requiere cepillado regular para evitar nudos en el pelaje.' },
-    { id: 5, name: 'Toby', species: 'Perro', breed: 'Beagle', birthDate: '2023-09', age: '6 meses', color: 'Tricolor', size: 'Pequeño', publishForAdoption: true, sterilized: false, vaccinated: true, vaccines: 'Parvovirus', hasChip: false, character: 'Energético', healthStatus: 'Bueno', image: '/placeholder.svg?height=300&width=300', description: 'Toby es un cachorro beagle muy energético y juguetón. Adora los paseos y tiene un gran olfato.', medicalRecord: 'Última revisión: 01/04/2024. Vacunas al día. Próxima vacuna programada para el 01/07/2024.' },
-])
-
-const filteredAnimals = computed(() => {
-    return animals.value.filter(animal =>
-        animal.name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        animal.species.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        animal.breed.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        animal.status.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        animal.color.toLowerCase().includes(searchTerm.value.toLowerCase())
-    )
-})
-
 const viewDetails = (animal) => {
     selectedAnimal.value = { ...animal }
     showDetailModal.value = true
@@ -295,4 +274,13 @@ const deleteAnimal = async (animal) => {
 
     // Aquí iría la lógica para eliminar el animal
 }
+
+onMounted(()=>{
+    let msg = getMsgToast()
+    if(msg){
+        toast.add(msg)
+        msg = null
+    }
+})
+
 </script>

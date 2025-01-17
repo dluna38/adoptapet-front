@@ -212,7 +212,11 @@
         </div>
     </div>
 
-    <MyToast title="Info" severity="error" :message="msgToast" ref="myToastRef" />
+    <Toast group="errorT" :pt="{
+                closeButton: {
+                    autofocus: false
+                }
+            }" />
 </template>
 
 
@@ -221,18 +225,15 @@ import { fetchEstadosHC, useEspecies, useRazas, fetchRazas, fetchEspecies } from
 import Select from 'primevue/select';
 import DatePicker from 'primevue/datepicker';
 import { Form } from '@primevue/forms';
-import MyToast from '~/components/MyToast.vue';
-
+import { useToast } from 'primevue/usetoast';
 const props = defineProps({
     forEdit: {
         type: Boolean,
         default: false
     }
 })
-
+const toast = useToast();
 const formInitialValues = ref(null);
-const myToastRef = useTemplateRef("myToastRef");
-const msgToast = ref('Error');
 const especies = useEspecies();
 const estadosHC = useEstadosHC();
 const razas = useRazas();
@@ -249,9 +250,9 @@ const fetchAnimal = async () => {
     }
 }
 
-function showToast() {
-    myToastRef.value.showTemplate();
-}
+function showToast(msg) {
+    toast.add({ severity:  Severities.ERROR, summary: 'Error',detail: msg, life: 5000 ,group:'errorT'});
+};
 
 const changeRazas = async () => {
     loadingRazas.value = true;
@@ -297,6 +298,7 @@ const handleImageUpload = (event) => {
 
 const addNewAnimal = async (e) => {
     if (!e.valid) {
+        showToast('Errores en el formulario');
         return;
     }
 
@@ -313,6 +315,9 @@ const addNewAnimal = async (e) => {
     }   
     console.log(Object.fromEntries(formData.entries()))
 
+    setMsgToast(Severities.SUCCESS,'Actualizado','Animal actualizado correctamente')
+    navigateTo('/administracion/animales')
+    return
     let response = null
     if(props.forEdit){
         response = await useAPI('/animal/'+oldAnimal.value.id, {
@@ -328,8 +333,7 @@ const addNewAnimal = async (e) => {
     
     if (response.status.value === "error") {
         console.log(response.error.value);
-        msgToast.value = response.error.value;
-        showToast();
+        showToast(response.error.value);
         return
     }
     navigateTo('/administracion/animales')
@@ -371,8 +375,7 @@ const resolver = ({ values }) => {
 };
 
 await Promise.all([fetchEspecies(), fetchEstadosHC(), fetchAnimal()])
-if(props.forEdit){
-    
+if(props.forEdit){ 
     newAnimal.value = {
         nombre: oldAnimal.value.nombre,
         sexo: oldAnimal.value.sexo,
@@ -399,11 +402,6 @@ onBeforeMount(()=>{
     if(props.forEdit){
     }
     formInitialValues.value = newAnimal.value
-})
-
-
-onMounted(async ()=>{
-    
 })
 
 </script>
