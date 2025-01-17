@@ -1,10 +1,11 @@
 <template>
-<ManageAnimal/>    
+    <ManageAnimal for-edit="true"/>
 </template>
 <script setup>
 import ManageAnimal from '~/components/ManageAnimal.vue';
+
 useHead({
-    title: 'Nuevo animal'
+    title: 'Editar animal'
 })
 
 </script>

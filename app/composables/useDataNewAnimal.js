@@ -22,10 +22,11 @@ export const fetchRazas = async (idEspecie) => {
     const razas = useRazas();
     
     if (!razas.value[idEspecie]) {
-
-        const { data } = await useAPI('/base-data/razas/especie/' + idEspecie);
+    
+        const response  = await useAPI('/base-data/razas/especie/' + idEspecie);
+        console.log(response);
         
-        razas.value[idEspecie] = [...data.value];
+        razas.value[idEspecie] = [...response.data.value];
     }
 };
 

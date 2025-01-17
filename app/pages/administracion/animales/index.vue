@@ -22,6 +22,7 @@
                     <column field="nombre" header="Nombre"></column>
                     <column field="raza.especie.nombre" header="Especie"></column>
                     <column field="raza.nombre" header="Raza"></column>
+                    <column field="sexo" header="Sexo"></column>
                     <column header="Edad">
                         <template #body="slotProps">
                             {{ getMonthsOrYearsFromNow(slotProps.data.fechaNacimiento) }}
@@ -79,7 +80,7 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="md:col-span-1">
-                            <img :src="getAnimalImage(selectedAnimal.fotoPortada.img)" :alt="selectedAnimal.nombre"
+                            <img :src="getAnimalImage(selectedAnimal.fotoPortada?.img)" :alt="selectedAnimal.nombre"
                                 class="w-full h-auto rounded-lg shadow-md" />
                         </div>
                         <div class="md:col-span-2">
@@ -256,8 +257,7 @@ const closeDetailModal = () => {
 }
 
 const editAnimal = (animal) => {
-    console.log(`Editar animal con ID: ${id}`)
-    // Aquí iría la lógica para editar el animal
+    navigateTo("/administracion/animales/editar/"+animal.id)
 }
 const deleteAnimal = async (animal) => {
     confirm.require({
